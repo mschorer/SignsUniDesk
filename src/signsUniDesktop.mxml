@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   xmlns:ns="de.ms_ite.mobile.*"
+					   xmlns:ns1="de.ms_ite.maptech.containers.*"
+					   xmlns:ns2="de.ms_ite.mobile.topplan.ui.*"
+					   implements="de.ms_ite.mobile.topplan.ILocationProvider,de.ms_ite.mobile.topplan.IContainerProvider"
+					   width="1000" height="700"
+					   activate="onActivateApp( event)" deactivate="onDeactivateApp(event)"
+					   creationComplete="initUI();"
+					   preinitialize="preinitApp(event)" 
+					   closing="handleClose(event)"
+					   pageTitle="Signs" showStatusBar="false"
+					   runtimeDPIProvider="de.ms_ite.mobile.CustomDPIProvider"
+					   splashScreenImage="@Embed('assets/sign-post1.png')"
+					   backgroundColor="0x28a0d8">
+	<fx:Style source="signs.css"/>
+	<fx:Declarations>
+		<fx:XML id="updSetup" xmlns="">
+			<configuration xmlns="http://ns.adobe.com/air/framework/update/configuration/1.0">
+				<url>http://www.alrightythen.de/mobile/update.xml</url>
+				<delay>1</delay>
+			</configuration>
+		</fx:XML>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import air.update.ApplicationUpdaterUI;
+			import air.update.events.StatusUpdateEvent;
+			import air.update.events.UpdateEvent;
+			
+			import de.ms_ite.containers.ImagePreviewWindow;
+			import de.ms_ite.containers.LocationHistoryWindow;
+
+			import de.ms_ite.mobile.topplan.*;
+			import de.ms_ite.mobile.topplan.AppSettings;
+			import de.ms_ite.maptech.cache.TileInfoPreloading;
+
+			import models.GpsPos;
+			import models.Model;
+
+			import mx.events.*;
+			import mx.managers.PopUpManager;
+
+			protected var defSettings:String = '<prefs><window x="100" y="100" width="1280" height="800"/><history x="50" y="50" width="400" height="800"/></prefs>';
+			protected var settingsFile:File = File.applicationStorageDirectory.resolvePath("prefs.xml");
+			protected var firstRun:Boolean = false;
+			protected var settings:XML;
+			
+			protected var signs:Signs;
+
+			protected var locHist:LocationHistoryWindow;
+			
+//			protected var aUpd:AutoUpdater;
+			var appUpdater:ApplicationUpdaterUI;
+			
+			protected function preinitApp(event:FlexEvent):void {
+				// TODO Auto-generated method stub
+				debug( "preinit.");
+				
+				AppSettings.online = false;
+				
+				AppSettings.appBaseUrl = "http://www.alrightythen.de/signsVia/";
+
+				AppSettings.persistentStoragePath = "C:\\ProgramData\\signsVia";
+//				AppSettings.databaseStoragePath = "C:\\Users\\markus\\work\\vianovis\\topplan\\debug";
+				
+				AppSettings.databaseImagePath = "app/webroot/debug/database/signs_108.db";
+				
+				Model.serviceURL = AppSettings.appBaseUrl+"amf/gateway.php";
+				Model.serviceName = "Signs";
+
+				Model.dbFile = "signs.db";
+//				Model.dbFile = "aampssler_0.9.98_Linux2.6.36.3_signs.db";
+//				Model.dbFile = "aampssler_0.9.98_Windows7_signs.db";
+//				Model.dbFile = "aampssler_0.9.990_Linux2.6.35.7-N7000XXLB1-CL933381_signs.db";
+				
+				TileInfoPreloading.dbFile = "tileCache.db";
+				TileInfoPreloading.cacheRelPath = "cache";				
+				
+				appUpdater = new ApplicationUpdaterUI();
+
+				var appXML:XML = NativeApplication.nativeApplication.applicationDescriptor; 
+				var ns:Namespace = appXML.namespace();
+				var appId:String = appXML.ns::id;
+				
+				AppSettings.versionNumber = appXML.ns::versionNumber; 
+
+				debug( "app ["+appId+"]");
+				
+				appUpdater.updateURL = "http://www.alrightythen.de/mobile/update.php?app="+appId;
+				appUpdater.delay = 1;
+				
+				appUpdater.isCheckForUpdateVisible = false;
+				appUpdater.isDownloadProgressVisible = true;
+				appUpdater.isDownloadUpdateVisible = true;
+				appUpdater.isFileUpdateVisible = true;
+				appUpdater.isInstallUpdateVisible = true;
+				appUpdater.isUnexpectedErrorVisible = false;
+
+				//we set the event handlers for INITIALIZED nad ERROR 
+				appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate); 
+				appUpdater.addEventListener(ErrorEvent.ERROR, onError); 
+
+				//we initialize the updater 
+				appUpdater.initialize();
+			} 
+
+			/** * Handler function triggered by the ApplicationUpdater.initialize; 
+			 * * The updater was initialized and it is ready to take commands 
+			 * * (such as <code>checkNow()</code> 
+			 * * @param UpdateEvent */ 
+			private function onUpdate(event:UpdateEvent):void { 
+				//start the process of checking for a new update and to install 
+				appUpdater.checkNow(); 
+			} 
+			
+			/** * Handler function for error events triggered by the ApplicationUpdater.initialize 
+			 * * @param ErrorEvent */ 
+			private function onError(event:ErrorEvent):void { 
+				debug(event.toString()); 
+			} 
+			
+			/** * A simple code just to read the current version of the application 
+			 * * and display it in a label. */ 
+			private function setApplicationVersion():void { 
+				var appXML:XML = NativeApplication.nativeApplication.applicationDescriptor; 
+				var ns:Namespace = appXML.namespace();
+				var v:String = appXML.ns::versionNumber;
+				debug( "App version:" + v); 
+			}
+				
+			private function loadSettings():void {
+				var file:File = settingsFile;
+				
+				var prefString:String = '';
+				
+				if ( file.exists) {
+					debug( "load settings from file.");
+					var stream:FileStream = new FileStream();
+					stream.open( file, FileMode.READ);
+					prefString = stream.readUTFBytes(stream.bytesAvailable);
+					stream.close();
+				} else {
+					prefString = defSettings;
+					firstRun = true;
+				}
+				
+				settings = new XML( prefString);
+				debug( "settings: "+settings);
+				
+				this.nativeWindow.x = parseInt( settings.window.@x);
+				this.nativeWindow.y = parseInt( settings.window.@y);
+				this.nativeWindow.width = parseInt( settings.window.@width);
+				this.nativeWindow.height = parseInt( settings.window.@height);
+			}
+			
+			private function saveSettings():void {
+				settings.window.@x = this.nativeWindow.x;
+				settings.window.@y = this.nativeWindow.y;
+				settings.window.@width = this.nativeWindow.width;
+				settings.window.@height = this.nativeWindow.height;
+
+				var file:File = settingsFile;
+				var stream:FileStream = new FileStream();
+				stream.open(file, FileMode.WRITE);
+				stream.writeUTFBytes( settings.toString());
+				stream.close();
+			}
+			
+			private function deleteSettings():void {
+				debug( "delete settings file.");
+				settingsFile.deleteFile();
+			}
+			
+			protected function handleClose( evt:Event):void {
+				debug( "exit");
+				
+				if ( locHist != null) locHist.saveSettings();
+				saveSettings();
+				
+				for (var i:int = NativeApplication.nativeApplication.openedWindows.length - 1; i >= 0; --i) {
+					NativeWindow(NativeApplication.nativeApplication.openedWindows[i]).close();
+				}
+				
+				NativeApplication.nativeApplication.exit();
+			}
+			
+//-----------------------------------------------------------------------------------------
+			
+			protected function initUI():void {
+				debug( "initUI");
+								
+				loadSettings();
+				
+				var appXML:XML = NativeApplication.nativeApplication.applicationDescriptor; 
+				var ns:Namespace = appXML.namespace();
+
+				signs = new Signs();
+				signs.currentState = 'pad_landscape';
+				signs.name = appXML.ns::id;
+				signs.version = AppSettings.versionNumber;
+					
+				signs.settings = settings;
+				signs.percentWidth = 100;
+				signs.percentHeight = 100;
+				
+				signs.addEventListener( Event.CLOSE, handleClose);
+				
+				addElement( signs);
+			}
+			
+			protected function onActivateApp(event:Event):void {
+				debug( "activate.");
+			}
+			
+			protected function onDeactivateApp(event:Event):void {
+				debug( "deactivate.");
+			}
+			
+			protected function handleButtons(event:KeyboardEvent):void {
+				
+				switch( event.keyCode) {
+					case Keyboard.MENU:
+						// Handle Home button.
+						debug( "MENU");
+						break;
+					
+					case Keyboard.BACK:
+						// Hanlde back button.
+						debug( "BACK");
+						break;
+				}
+			}
+			
+			public function get geoLocation():GpsPos {
+				return signs.mapView.geoLocation;
+			}
+			
+
+			public function getHistoryContainer():IHistoryContainer {
+				if ( locHist == null) {
+					locHist = new LocationHistoryWindow();
+					locHist.settings = this.settings;
+				}
+				
+				return locHist;
+			}
+
+			public function getPreviewContainer():IImagePreviewContainer {
+				var w:ImagePreviewWindow = new ImagePreviewWindow();
+				
+				return w;
+			}
+			//----------------------------------------------------------------------------------------------
+			
+			protected function debug( txt:String):void {
+				trace( "MOB: "+txt);
+			}			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:HorizontalLayout gap="2"/>
+	</s:layout>
+</s:WindowedApplication>

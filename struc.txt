@@ -1,0 +1,333 @@
+die item-typen.
+"name" wird angezeigt, "data" ist der verknüpfte wert.
+
+protected static var _itemTypeXML:XMLList = new XMLList( '' +
+	'<item name="Pfosten" data="10" render="post">' +
+		'<item name="Rohrpfosten" data="1010"/>' +
+		'<item name="Holzpfosten" data="1020"/>' +
+		'<item name="Lichtmast" data="1030"/>' +
+		'<item name="Holzmast" data="1040"/>' +
+		'<item name="Baum" data="1050"/>' +
+		'<item name="Holzwand" data="1060"/>' +
+		'<item name="Mauer" data="1070"/>' +
+	'</item>' +
+	'<item name="Wegweiser" data="20" render="sign">' +
+		'<item name="Rad" data="2010">' +
+			'<item name="Pfeil" data="201010"/>' +
+			'<item name="Richtung" data="201020"/>' +
+			'<item name="Tabelle 1-seitig" data="201030"/>' +
+			'<item name="Tabelle 2-seitig" data="201040"/>' +
+			'<item name="Einhänger" data="201050" render="subsign"/>' +
+			'<item name="Einschub" data="201060" render="subsign"/>' +
+		'</item>' +
+		'<item name="Wandern" data="2030">' +
+			'<item name="Ziel" data="203010"/>' +
+			'<item name="Richtung" data="203020"/>' +
+			'<item name="Richtung doppelt" data="203030"/>' +
+		'</item>' +
+		'<item name="MTB" data="2040">' +
+			'<item name="Ziel" data="204010"/>' +
+			'<item name="Richtung" data="204020"/>' +
+		'</item>' +
+		'<item name="Infotafel" data="2020"/>' +
+		'<item name="Loipe" data="2050">' +
+			'<item name="Ziel" data="205010"/>' +
+			'<item name="Richtung" data="205020"/>' +
+			'<item name="DSV" data="205030"/>' +
+			'<item name="Straßenquerung" data="205040"/>' +
+			'<item name="Starkes Gefälle" data="205050"/>' +
+			'<item name="Gefahrenpunkt" data="205060"/>' +
+		'</item>' +
+		'<item name="StVO" data="2060">' +
+			'<item name="Geh- und Radweg" data="206010"/>' +
+			'<item name="Gehweg" data="206020"/>' +
+			'<item name="Radweg" data="206030"/>' +
+			'<item name="Gesperrt" data="206040"/>' +
+			'<item name="Gesperrt, für Rad frei" data="206050"/>' +
+		'</item>' +
+	'</item>' +
+	'<item name="Beschriftung" data="28" render="label">' +
+		'<item name="Standard" data="2810"/>' +
+		'<item name="Hervorgehoben" data="2820"/>' +
+	'</item>' +
+	'<item name="Wege" data="30" render="info">' +
+		'<item name="Belagwechsel" data="3010">' +
+			'<item name="Asphalt – Kies" data="301010"/>' +
+			'<item name="Asphalt – erdgebunden" data="301020"/>' +
+			'<item name="Asphalt – staubfreie Decke" data="301030"/>' +
+			'<item name="Kies – erdgebunden" data="301040"/>' +
+			'<item name="Kies – staubfreie Deck" data="301050"/>' +
+			'<item name="erdgebunden – staubfreie Decke" data="301060"/>' +
+		'</item>' +
+		'<item name="Kategorie" data="3020">' +
+			'<item name="Steigung/Gefälle" data="302010"/>' +
+			'<item name="Geh- und Radweg" data="302020"/>' +
+			'<item name="Radweg" data="302030"/>' +
+			'<item name="Gehweg" data="302040"/>' +
+			'<item name="Wirtschafs-/Forstweg" data="302050"/>' +
+			'<item name="Hauptverkehrsstraße" data="302060"/>' +
+			'<item name="Ortsstraße" data="302070"/>' +
+			'<item name="Nebenstraße" data="302080"/>' +
+			'<item name="Treppe" data="302090"/>' +
+			'<item name="Schiebestrecke Rad" data="3020a0"/>' +
+			'<item name="Fußgängerzone" data="3020b0"/>' +
+			'<item name="Parkanlage" data="3020c0"/>' +
+			'<item name="Pfad (leicht)" data="3020d0"/>' +
+			'<item name="Pfad (mittel)" data="3020d4"/>' +
+			'<item name="Pfad (schwer)" data="3020d8"/>' +
+			'<item name="Weg mit alpinen Gefahren" data="3020e0"/>' +
+		'</item>' +
+		'<item name="Zustand" data="3030">' +
+			'<item name="Wegebelag" data="303010"/>' +
+			'<item name="Brückengeländer" data="303020"/>' +
+			'<item name="Treppengeländer" data="303030"/>' +
+			'<item name="Absturzsicherung fehlt" data="303040"/>' +
+			'<item name="Treppe" data="303050"/>' +
+			'<item name="Brücke" data="303060"/>' +
+			'<item name="Schlaglöcher" data="303070"/>' +
+			'<item name="Hindernis" data="303080"/>' +
+			'<item name="Baustelle" data="303090"/>' +
+			'<item name="Holzarbeiten" data="3030a0"/>' +
+		'</item>' +
+		'<item name="Gefahrenstelle" data="3040">' +
+			'<item name="Straßenquerung" data="304010"/>' +
+			'<item name="Radweg endet" data="304020"/>' +
+			'<item name="Gehweg endet" data="304030"/>' +
+			'<item name="hohes Verkehrsaufkommen" data="304040"/>' +
+			'<item name="schneller Verkehr" data="304050"/>' +
+			'<item name="Poller" data="304060"/>' +
+			'<item name="Umlaufschranke" data="304070"/>' +
+			'<item name="Schranke" data="304080"/>' +
+			'<item name="Absturzgefahr" data="304090"/>' +
+			'<item name="starkes Gefälle" data="3040a0"/>' +
+		'</item>' +
+	'</item>' +
+	'<item name="Info" data="40" render="info">' +
+		'<item name="Info" data="4005"/>' +
+		'<item name="Infrastruktur" data="4010">' +
+			'<item name="Infotafel" data="401010"/>' +
+			'<item name="Ruhebank" data="401018"/>' +
+			'<item name="Ruhebank + Tisch" data="401020"/>' +
+			'<item name="Rastplatz" data="401028"/>' +
+			'<item name="Parkplatz" data="401030"/>' +
+			'<item name="Bahnhof" data="401038"/>' +
+			'<item name="Bushaltestelle" data="401040"/>' +
+			'<item name="Bergbahn" data="401048"/>' +
+			'<item name="Sessellift" data="401050"/>' +
+			'<item name="Touristinfo" data="401058"/>' +
+			'<item name="Gastronomie" data="401060"/>' +
+			'<item name="Hafen" data="401068"/>' +
+			'<item name="Fähre" data="401070"/>' +
+			'<item name="Fahrradverleih" data="401078"/>' +
+			'<item name="Radservice" data="401080"/>' +
+			'<item name="Radwerkstatt" data="401088"/>' +
+			'<item name="Fahrradparken" data="401090"/>' +
+			'<item name="Fahrradbox" data="401098"/>' +
+			'<item name="Schließfächer" data="4010a0"/>' +
+			'<item name="Akku Ladestation" data="4010a8"/>' +
+			'<item name="Akku Wechselstation" data="4010b0"/>' +
+		'</item>' +
+		'<item name="POI" data="4020">' +
+			'<item name="Aussicht" data="402008"/>' +
+			'<item name="Kapelle" data="402010"/>' +
+			'<item name="Kirche" data="402018"/>' +
+			'<item name="Kloster" data="402020"/>' +
+			'<item name="Kreuz, Bildstock" data="402028"/>' +
+			'<item name="Grotte" data="402030"/>' +
+			'<item name="Freibad" data="402038"/>' +
+			'<item name="Badeweiher" data="402040"/>' +
+			'<item name="Weiher" data="402048"/>' +
+			'<item name="See" data="402050"/>' +
+			'<item name="Liegewiese" data="402058"/>' +
+			'<item name="Hallenbad" data="402060"/>' +
+			'<item name="Kneippanlage" data="402068"/>' +
+			'<item name="Lehrpfad" data="402070"/>' +
+			'<item name="Station Lehrpfad" data="402080"/>' +
+			'<item name="Schloß" data="402088"/>' +
+			'<item name="Burg" data="402090"/>' +
+			'<item name="Burgruine" data="402098"/>' +
+			'<item name="Turm" data="4020a0"/>' +
+			'<item name="Gipfel" data="4020a8"/>' +
+			'<item name="Spielplatz" data="4020b0"/>' +
+			'<item name="Kurpark" data="4020b8"/>' +
+			'<item name="Wasserfall" data="4020c0"/>' +
+			'<item name="Fluss-/Bachlauf" data="4020c8"/>' +
+			'<item name="Moor" data="4020d0"/>' +
+			'<item name="Denkmal" data="4020d8"/>' +
+			'<item name="Naturdenkmal" data="4020e0"/>' +
+			'<item name="Museum" data="4020e8"/>' +
+			'<item name="Berghütte" data="4020f0"/>' +
+			'<item name="Golfplatz" data="4020f8"/>' +
+			'<item name="Minigolf" data="4020fc"/>' +
+		'</item>' +
+	'</item>');
+
+die "befestigungs"-optionen.
+ebene 1 wird als überschrift angezeigt, wenn der item-type mit ebene-1-data beginnt.
+ebene 2 sind dann die auswahlen.
+es wird auf ebene 1 das längste/spezifischte aus gewählt, das noch passt.
+
+beispiele:
+- wenn als item-typ ein "pfosten" ausgewählt ist (der data "10xx" hat), dann wird "Fundament: unbefestigt, Kies ..." angezeigt.
+- wenn ein "schild" (data "20xxyy") ausgewählt ist, dann werden die "schellen" angeboten, es sei denn es
+- sind "einhänger"/"201050" oder "einschub"/"201060" ausgewählt, werden die spezifischeren "U-Schiene" oder "Einschub" angeboten 
+
+protected static var _itemConnectionXML:XMLList = new XMLList( '' +
+	'<item name="Fundament" data="10">' +
+		'<item name="unbefestigt" data="10"/>' +
+		'<item name="Kies" data="20"/>' +
+		'<item name="Asphalt" data="30"/>' +
+		'<item name="Pflaster" data="40"/>' +
+		'<item name="Beton" data="50"/>' +
+		'<item name="Wand" data="60"/>' +
+	'</item>' +
+	'<!-- item name="Schrauben" data="20">' +
+		'<item name="Schrauben" data="10"/>' +
+		'<item name="Schrauben (Wand)" data="20"/>' +
+		'<item name="Holzschrauben" data="30"/>' +
+		'<item name="Sicherheitsschraube" data="40"/>' +
+	'</item -->' +
+	'<item name="Schellen" data="20">' +
+		'<item name="Klemm 15/60" data="10"/>' +
+		'<item name="Klemm 15/76" data="12"/>' +
+		'<item name="Klemm 20/60" data="14"/>' +
+		'<item name="Klemm 20/76" data="16"/>' +
+		'<item name="Rohr ø 60, l=70 mm" data="20"/>' +
+		'<item name="Rohr ø 60, l=350 mm" data="22"/>' +
+		'<item name="Rohr ø 60, l=500 mm" data="24"/>' +
+		'<item name="Rohr ø 76, l=70 mm" data="26"/>' +
+		'<item name="Rohr ø 76, l=350 mm" data="28"/>' +
+		'<item name="Rohr ø 76, l=500 mm" data="2a"/>' +
+		'<item name="2x Rohr ø 60, l=350 mm" data="30"/>' +
+		'<item name="2x Rohr ø 76, l=350 mm" data="32"/>' +
+		'<item name="Band seitlich h=150 mm" data="40"/>' +
+		'<item name="Band seitlich h=200 mm" data="42"/>' +
+		'<item name="Schellenband (ø 60 - 80 mm)" data="50"/>' +
+		'<item name="Schellenband (ø 80 - 100 mm)" data="52"/>' +
+		'<item name="Schellenband (ø 100 - 120 mm)" data="54"/>' +
+		'<item name="Schellenband (ø 120 - 140 mm)" data="56"/>' +
+		'<item name="Bandschelle, l=70 mm" data="60"/>' +
+		'<item name="Bandschelle, l=350 mm" data="62"/>' +
+		'<item name="Bandschelle, l=500 mm" data="64"/>' +
+		'<item name="Schneckenschraubenband" data="70"/>' +
+		'<item name="Schraubgehäuse für Schneckenschraubenband" data="72"/>' +
+	'</item>' +
+	'<item name="U-Schiene" data="201050">' +
+		'<item name="U-Schiene Set" data="10"/>' +
+		'<item name="U-Schiene" data="20"/>' +
+		'<item name="U-Schiene Masten" data="30"/>' +
+		'<item name="U-Schiene (ø 60-80 mm)" data="40"/>' +
+	'</item>' +
+	'<item name="Einschub" data="201060">' +
+		'<item name="Omega" data="10"/>' +
+		'<item name="Schwalbenschwanz" data="20"/>' +
+	'</item>');
+
+"länge" wird nur bei "pfosten" angeboten:
+
+protected static var _itemLengthXML:XMLList = new XMLList( '' +
+	'<item name="Länge" data="10">' +
+		'<item name="1,50 m" data="15"/>' +
+		'<item name="2,00 m" data="20"/>' +
+		'<item name="2,50 m" data="25"/>' +
+		'<item name="3,00 m" data="30"/>' +
+		'<item name="3,50 m" data="35"/>' +
+		'<item name="4,00 m" data="40"/>' +
+		'<item name="über 4,00 m" data="99"/>' +
+		'<item name="0,50 m Verlängerung" data="5"/>' +
+		'<item name="1,00 m Verlängerung" data="10"/>' +
+	'</item>');
+
+
+format/durchmesser/grösse je nachdem ...
+die schilder-grössen sind wandern/rad/... spezifisch 
+
+protected static var _itemFormatXML:XMLList = new XMLList( '' +
+	'<item name="Durchmesser" data="10">' +
+		'<item name="unter 60 mm" data="55"/>' +
+		'<item name="60 x2 mm" data="60"/>' +
+		'<item name="60 x2,9 mm" data="62"/>' +
+		'<item name="76 mm" data="76"/>' +
+		'<item name="60 – 80 mm" data="80"/>' +
+		'<item name="80 – 100 mm" data="100"/>' +
+		'<item name="100 – 120 mm" data="120"/>' +
+		'<item name="über 120 mm" data="125"/>' +
+	'</item>' +
+	'<item name="Format" data="2010">' +
+		'<item name="100 x 100 mm" data="100100"/>' +
+		'<item name="150 x 150 mm" data="150150"/>' +
+		'<item name="150 x 200 mm" data="150200"/>' +
+		'<item name="150 x 650 mm" data="150650"/>' +
+		'<item name="150 x 800 mm" data="150800"/>' +
+		'<item name="200 x 500 mm" data="200500"/>' +
+		'<item name="200 x 800 mm" data="200800"/>' +
+		'<item name="250 x 250 mm" data="250250"/>' +
+		'<item name="250 x 1000 mm" data="2501000"/>' +
+		'<item name="300 x 300 mm" data="300300"/>' +
+		'<item name="400 x 400 mm" data="400400"/>' +
+	'</item>' +
+	'<item name="Format" data="2030">' +
+		'<item name="50 x 12" data="5012"/>' +
+		'<item name="26 x 12" data="2612"/>' +
+		'<item name="20 x 12" data="2012"/>' +
+	'</item>' +
+	'<item name="Format" data="2040">' +
+		'<item name="12 x 50" data="1250"/>' +
+		'<item name="12 x 20" data="1220"/>' +
+		'<item name="12 x 26" data="1226"/>' +
+	'</item>');
+
+die spezifischen "erweiterten fehlercodes" um die texte nicht jedes mal manuell eingeben zu müssen: 
+
+protected static var _eStatusXML:XMLList = new XMLList( '' +
+	'<item name="Pfosten" data="10">' +
+		'<item name="---" data="0"/>' +
+		'<item name="steht schief – bitte gerade setzen" data="1008"/>' +
+		'<item name="beschädigt – Reparatur möglich" data="1010"/>' +
+		'<item name="beschädigt – Austausch erforderlich" data="1018"/>' +
+		'<item name="korrodiert" data="1020"/>' +
+		'<item name="durch längeren Pfosten ersetzen" data="1028"/>' +
+		'<item name="durch Bewuchs verdeckt – bitte frei schneiden" data="1030"/>' +
+		'<item name="nicht sichtbar" data="1038"/>' +
+		'<item name="versetzen" data="1040"/>' +
+	'</item>' +
+	'<item name="Wegweiser" data="20">' +
+		'<item name="---" data="0"/>' +
+		'<item name="Lichtraum beeinträchtigt" data="2008"/>' +
+		'<item name="Wegweiser stark beschädigt – Austausch erforderlich" data="2010"/>' +
+		'<item name="beschädigt" data="2018"/>' +
+		'<item name="nicht vorhanden" data="2020"/>' +
+		'<item name="hat Risse – Austausch noch nicht erforderlich" data="2028"/>' +
+		'<item name="hat Risse – Austausch wird empfohlen" data="2030"/>' +
+		'<item name="verbogen" data="2038"/>' +
+		'<item name="zeigt in Himmelsrichtungen)" data="2040"/>' +
+		'<item name="nicht waagrecht – bitte neu montieren" data="2048"/>' +
+		'<item name="überklebt – bitte säubern" data="2050"/>' +
+		'<item name="übermalt – bitte säubern" data="2058"/>' +
+		'<item name="verschmutzt – bitte säubern" data="2060"/>' +
+		'<item name="mit falscher Pfeilrichtung" data="2068"/>' +
+		'<item name="ausgebleicht – Austausch noch nicht erforderlich" data="2070"/>' +
+		'<item name="ausgebleicht – Austausch wird empfohlen" data="2078"/>' +
+		'<item name="ergänzen" data="2080"/>' +
+		'<item name="Aufkleber ersetzen" data="2088"/>' +
+		'<item name="Aufkleber anbringen" data="2090"/>' +
+		'<item name="Radwegweiser entsprechen nicht dem FGSV-Standard" data="2098"/>' +
+		'<item name="Wanderschilder entsprechen nicht dem regionalen Standard" data="20a0"/>' +
+		'<item name="Moutainbikeschilder entsprechen nicht dem regionalen Standard" data="20a8"/>' +
+		'<item name="Radwegweiser nur einseitig beschriftet" data="20b0"/>' +
+		'<item name="alle Radschilder an einen Standort montieren" data="20b8"/>' +
+		'<item name="alle Wanderschilder an einen Standort montieren" data="20c0"/>' +
+	'</item>' +
+	'<item name="Wegezustand" data="3030">' +
+		'<item name="---" data="0"/>' +
+		'<item name="Wegebelag" data="3008"/>' +
+		'<item name="Brückengeländer" data="3010"/>' +
+		'<item name="Treppengeländer" data="3018"/>' +
+		'<item name="Absturzsicherung fehlt" data="3020"/>' +
+		'<item name="Treppe" data="3028"/>' +
+		'<item name="Brücke" data="3030"/>' +
+		'<item name="Schlaglöcher" data="3038"/>' +
+		'<item name="Hindernis" data="3040"/>' +
+		'<item name="Baustelle" data="3048"/>' +
+		'<item name="Holzarbeiten" data="3050"/>' +
+	'</item>');

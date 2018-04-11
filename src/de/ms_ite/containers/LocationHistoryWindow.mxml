@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:ns="de.ms_ite.mobile.*"
+			xmlns:ns1="de.ms_ite.mobile.topplan.components.*"
+			implements="de.ms_ite.mobile.topplan.IHistoryContainer"
+			width="400" height="300" 
+			type="{NativeWindowType.UTILITY}" showStatusBar="false" 
+			creationComplete="initUI(event)"
+			closing="handleClose(event)">
+	<fx:Declarations>
+		<s:DateTimeFormatter id="fmt" dateTimePattern="yyyyMMdd_HHmmss" />
+		<!-- s:RemoteObject id="locService" fault="faultHandler( event)" source="Topplan" destination="amfphp">
+		<s:method name="getActions" result="listActions( event);" />
+		</s:RemoteObject -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import models.RetrievalParameters;
+			import models.SignsAction;
+			import models.SignsLocation;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			protected var _loc:SignsLocation;
+			protected var actionModel:SignsAction;
+			protected var _busy:Boolean = false;
+			
+			protected var _settings:XML;
+			
+			protected var list:ArrayCollection;
+			
+			protected function initUI(event:FlexEvent):void {
+				// TODO Auto-generated method stub
+				
+				if ( _loc != null) setLocation();
+				
+				loadSettings();
+			}
+			
+			public function set settings( s:XML):void {
+				_settings = s;
+			}
+			
+			public function get settings():XML {
+				return _settings;
+			}
+			
+			public function loadSettings():void {
+				var o:Object = settings.history.length();
+				if ( settings.history.length() > 0) {
+					this.nativeWindow.x = parseInt( settings.history.@x);
+					this.nativeWindow.y = parseInt( settings.history.@y);
+					this.nativeWindow.width = parseInt( settings.history.@width);
+					this.nativeWindow.height = parseInt( settings.history.@height);
+				} else {
+					this.nativeWindow.x = 50;
+					this.nativeWindow.y = 50;
+					this.nativeWindow.width = 400;
+					this.nativeWindow.height = 600;					
+				}
+			}
+				
+			public function saveSettings():void {
+				if ( this.nativeWindow != null) {
+					settings.history.@x = this.nativeWindow.x;
+					settings.history.@y = this.nativeWindow.y;
+					settings.history.@width = this.nativeWindow.width;
+					settings.history.@height = this.nativeWindow.height;
+				}
+			}
+			
+			public function show(owner:DisplayObjectContainer, modal:Boolean = false):void {
+				if ( ! visible) visible = true;
+				else open( true);
+			}
+			
+			public function set location( l:SignsLocation):void {
+				if ( _loc == l) return;
+			
+				_loc = l;
+				this.title = _loc.tag_major+"-"+_loc.tag_minor;
+				
+				if ( lShots != null) setLocation();
+			}
+			
+			protected function setLocation():void {
+				var tables:Array = null;
+				var fields:Array = null;
+				var conds:Object = null;
+				
+				var sp:RetrievalParameters;
+
+				if ( actionModel == null) actionModel = new SignsAction();
+				
+				fields = [{'distinct a.*':''}];
+				tables = [{ 'items':'i'}, {'itemactions':'a'}];
+				conds = { ' i.cache_id=a.cache_item_id':'', ' ( a.cache_url IS NOT NULL OR a.url IS NOT NULL)':''};
+				conds[ ' i.cache_location_id='+_loc.cache_id] = '';
+				
+				sp = new RetrievalParameters( conds, true, 'modified DESC', '0, '+actionModel.pageSizeLocal);
+				sp.cachable = false;
+				sp.fields = fields;
+				if ( tables != null) sp.tables = tables;
+				
+				lShots.dataProvider = actionModel.list( sp);
+			}
+			
+			protected function handleClose(event:Event):void {
+				
+				saveSettings();
+				
+				event.preventDefault();
+				
+				visible = false;
+				// TODO Auto-generated method stub
+//				this.close();
+				trace( "closed.");
+			}			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<s:List id="lShots" itemRenderer="de.ms_ite.renderers.ImageHistoryRenderer" width="100%" height="100%"/>
+</s:Window>
